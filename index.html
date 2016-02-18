@@ -1,0 +1,147 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="WorkersContactList">
+<head>
+    <title>Work contacts</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/paper.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/ladda/dist/ladda-themeless.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-additions/dist/bootstrap-additions.min.css">
+     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"  />
+    
+    <link href="styles/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-dark navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Work contacts
+			</a >
+		</div >
+	</div >
+</nav >
+
+<div class="container main-content" >
+    
+<div class="row">
+<div class="col-md-8" ng-controller="workersListController">
+    <div class="row">
+<div class="col-md-12">
+ 
+    <form class="form-inline well well-sm">
+        <span class="fa fa-search"></span>
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   ng-model="search"
+                   placeholder="Search"
+                   />
+        </div>
+        <span class="fa fa-sort"></span>
+         <div class="form-group">
+            <select class="form-control" ng-model="ordering">
+                <option value="name">Name (Asc)</option>
+                <option value="-name">Name (Desc)</option>
+                <option value="email">Email (Asc)</option>
+                <option value="-email">Email (Desc)</option>
+             </select>
+        </div>
+         <button class="btn btn-primary btn-sm pull-right"
+                        ng-click ="showCreateWorkerModal()">Create new</button>
+                    <div class="clearfix"></div>
+    </form>
+           </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderred"
+                   infinite-scroll="loadMore()"
+                   infinite-scroll-distance="1">
+                <tr>
+                <th class="col-1">#</th>
+                    <th class="col-2">Image</th>
+                <th class="col-3"><div class="sortables">
+                        <span ng-click="ordering='email'"  class="fa fa-sort-asc"></span>
+                        <span ng-click="ordering='-email'" class="fa fa-sort-desc"></span>
+                    </div>Name
+                    </th>
+                <th class="col-4">      <div class="sortables">
+                        <span ng-click="ordering='email'"  class="fa fa-sort-asc"></span>
+                        <span ng-click="ordering='-email'" class="fa fa-sort-desc"></span>
+                    </div>Email
+              
+                        </th>
+                <th class="col-5">Phone #</th>
+                </tr>
+                <tr ng-repeat="worker in contactSrv.workers"
+                    ng-style="{
+                              'background-color': (worker.email === contactSrv.selectedWorker.email) ? 'lightgray':''
+                              }"
+                    ng-click="contactSrv.selectedWorker = worker">
+                    <td>{{$index + 1}}</td>
+                    <td><img ng-if='worker.photo' ng-src="{{worker.photo}}"
+                             class="img-circle profile-photo"
+                             alt="image of {{worker.name}}" >
+                    <img ng-if='!worker.photo' ng-src="images/profile.png"
+                             class="img-circle profile-photo"></td>
+                    <td>{{worker.name}}</td>
+                    <td>{{worker.email}}</td>
+                    <td>{{worker.phonenumber}}</td>
+                </tr>
+
+            </table>
+            <div ng-show = "contactSrv.workers.length == 0 && !contactSrv.isLoading">
+                <div class="alert alert-info">
+                    <p class="text-center">There are no records for the search: <i>'{{search}}'</i></p>
+                </div>
+                </div>
+            <div class="spinner" ng-show="contactSrv.isLoading">
+            <span us-spinner="{radius:8, width:5, length: 3,lines: 9}"></span>
+            <p>Loading...</p>    
+            </div>
+        </div>
+
+    </div>
+    </div>
+    
+    
+           <div class="col-md-4" >
+            <div class="panel panel-default"  ng-controller="workerDetailsController">
+                <div class="panel-heading">details
+                <button class="btn btn-danger btn-sm pull-right"
+                        ng-click ="remove()"
+                        ladda="contactSrv.isDeleting">Delete</button>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal"
+                          ng-submit="save()"
+                          novalidate>
+                             <ng-include src="'templates/form.html'"></ng-include>
+                    </form>
+                </div>
+            </div>
+            <pre>{{search}}</pre>
+        </div>
+    </div>
+    
+   
+</div >
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/spin.js/spin.js"></script>
+<script src="bower_components/angular-spinner/angular-spinner.js"></script>
+<script src="bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
+<script src="bower_components/ladda/dist/ladda.min.js"></script>
+<script src="bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+
+
+<script src="main.js" ></script >
+</body >
+</html >
